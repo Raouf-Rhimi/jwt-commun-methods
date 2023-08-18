@@ -199,4 +199,34 @@ public class TokenService {
         }
         return groups;
     }
+
+    /**
+    * this method extract token id from JWT token.
+    */
+    public String getJTI(String token){
+        String jti="";
+        try {
+            JWT jwt = JWTParser.parse(token);
+            JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+            jti = claimsSet.getJWTID();
+        }catch (ParseException e){
+            System.out.println("error occurred when parsing token");
+        }
+        return jti;
+    }
+
+    /**
+    * this method extract the list of audience from JWT token.
+    */
+    public List<String> getAudience(String token){
+        List<String> audience= new ArrayList<>();
+        try {
+            JWT jwt = JWTParser.parse(token);
+            JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+            audience = claimsSet.getAudience();
+        }catch (ParseException e){
+            System.out.println("error occurred when parsing token");
+        }
+        return audience;
+    }
 }
