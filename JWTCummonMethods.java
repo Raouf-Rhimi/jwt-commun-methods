@@ -162,4 +162,41 @@ public class TokenService {
         }
         return userId;
     }
+
+    /**
+    * this method extract "realm_access" roles from JWT token.
+    */
+     public List<String > extractRoles(String token)  {
+        List<String> roles=new ArrayList<String>();
+        try{
+            JWT jwt = JWTParser.parse(token);
+            JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+            Map<String, Object> realmAccessRoles = claimsSet.getJSONObjectClaim("realm_access");
+            String[] rolesFromClaim=realmAccessRoles.get("roles").toString().substring(1, realmAccessRoles.get("roles").toString().length() - 1).split(",");
+            for(String role:rolesFromClaim){
+                roles.add(role.substring(1,role.length()-1));
+            }
+        }catch (ParseException e){
+            System.out.println("Error while parsing token");
+        }
+        return roles;
+    }
+
+    /**
+    * this method extract groups from JWT token.
+    */
+    public List<String > extractGroups(String token)  {
+        List<String> groups=new ArrayList<String>();
+        try{
+            JWT jwt = JWTParser.parse(token);
+            JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+            String[] groupsClaim = claimsSet.getStringArrayClaim("groups");
+            for(String group:groupsClaim){
+                groups.add(group.substring(1));
+            }
+        }catch (ParseException e){
+            System.out.println("Error while parsing token");
+        }
+        return groups;
+    }
 }
